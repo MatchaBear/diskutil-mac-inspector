@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Interactive File Cleanup Shortcut
+# Usage: ./cleanup [size_in_mb]
+# Example: ./cleanup 50  # Find files larger than 50MB
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PYTHON_SCRIPT="$SCRIPT_DIR/interactive_cleaner.py"
+
+# Default size if not provided
+SIZE=${1:-100}
+
+echo "🧹 Starting Interactive File Cleanup"
+echo "Minimum file size: ${SIZE}MB"
+echo "=================================="
+
+# Check if Python script exists
+if [ ! -f "$PYTHON_SCRIPT" ]; then
+    echo "❌ Error: interactive_cleaner.py not found in $SCRIPT_DIR"
+    echo "Make sure both scripts are in the same directory"
+    exit 1
+fi
+
+# Check Python 3
+if ! command -v python3 &> /dev/null; then
+    echo "❌ Error: python3 not found"
+    echo "Please install Python 3"
+    exit 1
+fi
+
+# Run the cleanup script
+python3 "$PYTHON_SCRIPT" "$SIZE"
+
+echo ""
+echo "✨ Cleanup session finished!"
+echo "Files moved to Trash can be restored if needed."
+echo "Empty Trash to permanently free up space."
+
